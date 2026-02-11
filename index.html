@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Resume Forge | Premium Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #05070a; color: #e2e8f0; }
+        
+        /* Premium Background Glow */
+        .bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% -20%, #1e1b4b 0%, #05070a 60%);
+            z-index: -1;
+        }
+
+        /* Card & Input Styling */
+        .glass-card { 
+            background: rgba(15, 17, 26, 0.7); 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+        }
+        .input-style { 
+            background: rgba(255, 255, 255, 0.03); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 14px; padding: 12px 16px; font-size: 14px; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .input-style:focus { 
+            background: rgba(255, 255, 255, 0.07);
+            border-color: #6366f1; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            outline: none; 
+        }
+
+        /* PDF Preview Styles (Keep Original Logic) */
+        .pdf-classic {
+            font-family: 'Times New Roman', serif; background: white; color: black;
+            padding: 20px 30px; width: 210mm; min-height: 297mm; margin: 0 auto;
+            border: 1px solid #000; outline: 4px double #000; outline-offset: -10px;
+            box-sizing: border-box; text-align: left;
+        }
+        .pdf-section { background: #e0e0e0; border: 1px solid #000; padding: 4px 10px; font-size: 16px; font-weight: bold; margin: 12px 0 6px 0; text-transform: uppercase; }
+        .pdf-address-box { background: #f2f2f2; border: 1px solid #000; padding: 8px 12px; font-size: 14px; margin-bottom: 15px; }
+        .pdf-list { list-style: none; padding-left: 25px; }
+        .pdf-list li { position: relative; font-size: 14px; margin-bottom: 4px; }
+        .pdf-list li::before { content: "\2713"; position: absolute; left: -20px; font-weight: bold; }
+        .pdf-table { width: 100%; border-collapse: collapse; }
+        .pdf-table td { padding: 4px 8px; font-size: 14px; border-bottom: 1px solid #eee; }
+
+        /* Modal & Scrollbars */
+        .preview-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100; padding: 10px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="bg-glow"></div>
+
+    <header class="max-w-2xl mx-auto px-6 pt-10 pb-6 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                <i class="fas fa-feather-pointed text-white text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight">Resume Forge</h1>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <p class="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">Ready for Export</p>
+                </div>
+            </div>
+        </div>
+        <button onclick="openPreview()" class="bg-white text-black hover:bg-slate-200 px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-xl">
+            <i class="fas fa-paper-plane"></i> Preview
+        </button>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 pb-12 space-y-6">
+        
+        <section class="glass-card rounded-[2rem] p-8">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="w-8 h-8 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-400"><i class="fas fa-user text-sm"></i></span>
+                <h2 class="text-lg font-bold">Personal Contact</h2>
+            </div>
+            <div class="grid gap-4">
+                <input type="text" id="in-name" placeholder="Full Name" value="TANNU" class="input-style w-full">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="in-phone" placeholder="Phone" value="+91 9315886472" class="input-style w-full">
+                    <input type="text" id="in-email" placeholder="Email" value="kritikagupta8137@gmail.com" class="input-style w-full">
+                </div>
+                <textarea id="in-address" placeholder="Residential Address" rows="2" class="input-style w-full">Arvind Nagar, Ghonda, Shahdara, Delhi, 110053, India</textarea>
+            </div>
+        </section>
+
+        <section class="glass-card rounded-[2rem] p-8">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400"><i class="fas fa-fingerprint text-sm"></i></span>
+                <h2 class="text-lg font-bold">Identity Bio</h2>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider ml-1">Father's Name</label>
+                    <input type="text" id="in-fname" value="Mr. Girdhari Lal" class="input-style w-full">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider ml-1">DOB</label>
+                    <input type="text" id="in-dob" value="06/09/2007" class="input-style w-full">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider ml-1">Gender</label>
+                    <input type="text" id="in-gender" value="Female" class="input-style w-full">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider ml-1">Status</label>
+                    <input type="text" id="in-status" value="Single" class="input-style w-full">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider ml-1">Nationality</label>
+                    <input type="text" id="in-nat" value="Indian" class="input-style w-full">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] text-slate-500 font-bold uppercase tracking-wider ml-1">Languages</label>
+                    <input type="text" id="in-lang" value="Hindi, English" class="input-style w-full">
+                </div>
+            </div>
+        </section>
+
+        <div id="dynamic-sections" class="space-y-6">
+            <section class="glass-card rounded-[2rem] p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400"><i class="fas fa-graduation-cap text-sm"></i></span>
+                        <h2 class="text-lg font-bold">Education</h2>
+                    </div>
+                    <button onclick="addField('qual')" class="text-xs font-bold text-indigo-400 bg-indigo-400/10 px-4 py-2 rounded-xl">+ Add</button>
+                </div>
+                <div id="qual-list" class="space-y-3">
+                    <div class="flex gap-2 group"><input type="text" value="10th Passed from CBSE Board (67%)" class="qual-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                    <div class="flex gap-2 group"><input type="text" value="Diploma in IT - Computer Application from APLL" class="qual-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                    <div class="flex gap-2 group"><input type="text" value="12th PCM Passed from NIOS Board" class="qual-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                </div>
+            </section>
+
+            <section class="glass-card rounded-[2rem] p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400"><i class="fas fa-briefcase text-sm"></i></span>
+                        <h2 class="text-lg font-bold">Experience</h2>
+                    </div>
+                    <button onclick="addField('exp')" class="text-xs font-bold text-indigo-400 bg-indigo-400/10 px-4 py-2 rounded-xl">+ Add</button>
+                </div>
+                <div id="exp-list" class="space-y-3">
+                    <div class="flex gap-2 group"><input type="text" value="1 Month Experience in Kema Sutra Gold as a Telecaller" class="exp-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                    <div class="flex gap-2 group"><input type="text" value="1 Month Experience in Jio Company as a Telecaller" class="exp-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                    <div class="flex gap-2 group"><input type="text" value="3 Months Experience in Dubey Associates, Durgapuri Chowk as a Letter Typist" class="exp-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                </div>
+            </section>
+
+            <section class="glass-card rounded-[2rem] p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400"><i class="fas fa-bolt-lightning text-sm"></i></span>
+                        <h2 class="text-lg font-bold">Behavioral Skills</h2>
+                    </div>
+                    <button onclick="addField('skill')" class="text-xs font-bold text-indigo-400 bg-indigo-400/10 px-4 py-2 rounded-xl">+ Add</button>
+                </div>
+                <div id="skill-list" class="space-y-3">
+                    <div class="flex gap-2 group"><input type="text" value="Honest" class="skill-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                    <div class="flex gap-2 group"><input type="text" value="Team Spirit" class="skill-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                    <div class="flex gap-2 group"><input type="text" value="Hard Working" class="skill-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                    <div class="flex gap-2 group"><input type="text" value="Time Punctual" class="skill-input input-style flex-1"><button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="max-w-2xl mx-auto px-6 py-12 text-center">
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8"></div>
+        <div class="flex flex-col items-center gap-4">
+            <div class="flex gap-4 text-slate-500 text-lg">
+                <i class="fab fa-apple hover:text-white cursor-pointer transition-colors"></i>
+                <i class="fab fa-google-play hover:text-white cursor-pointer transition-colors"></i>
+                <i class="fas fa-shield-halved hover:text-white cursor-pointer transition-colors"></i>
+            </div>
+            <p class="text-slate-500 text-sm font-medium">Made with <i class="fas fa-heart text-red-500/60 mx-1"></i> by Resume Forge</p>
+            <p class="text-[10px] text-slate-600 uppercase tracking-widest">&copy; 2024 All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <div id="previewModal" class="preview-modal">
+        <div class="h-full w-full max-w-4xl mx-auto flex flex-col bg-[#111] rounded-[2.5rem] overflow-hidden shadow-2xl">
+            <div class="p-6 flex justify-between items-center border-b border-white/5 bg-[#15171a]">
+                <div>
+                    <h3 class="font-bold text-lg">A4 Preview</h3>
+                    <p class="text-xs text-slate-400">Standard Professional Layout</p>
+                </div>
+                <button onclick="closePreview()" class="w-10 h-10 flex items-center justify-center bg-white/5 rounded-full hover:bg-white/10"><i class="fas fa-xmark"></i></button>
+            </div>
+            <div class="flex-1 overflow-auto bg-[#1a1c20] p-4 md:p-10">
+                <div id="resume-output" class="pdf-classic"></div>
+            </div>
+            <div class="p-6 bg-[#15171a] border-t border-white/5">
+                <button onclick="downloadPDF()" class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-2xl font-bold text-lg transition-all shadow-xl shadow-indigo-600/20">
+                    <i class="fas fa-file-pdf mr-2"></i> Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addField(type) {
+            const container = document.getElementById(type + '-list');
+            const div = document.createElement('div');
+            div.className = 'flex gap-2 group';
+            div.innerHTML = `<input type="text" placeholder="Add entry..." class="${type}-input input-style flex-1">
+                             <button onclick="this.parentElement.remove()" class="text-red-500/50 hover:text-red-500 px-2 transition-colors"><i class="fas fa-circle-minus"></i></button>`;
+            container.appendChild(div);
+        }
+
+        function generateHTML() {
+            const getValue = id => document.getElementById(id).value;
+            const getList = cls => Array.from(document.querySelectorAll('.' + cls)).map(i => i.value).filter(v => v);
+
+            return `
+                <div style="text-align:center; font-size:24px; font-weight:bold; text-decoration:underline; margin-bottom:15px;">RESUME</div>
+                <div class="pdf-address-box">
+                    <b>Address:</b> ${getValue('in-address')}<br>
+                    <b>Mob:</b> ${getValue('in-phone')}<br>
+                    <b>Email:</b> ${getValue('in-email')}
+                </div>
+                <div class="pdf-section">Career Objective</div>
+                <p style="font-size:14px; text-align:justify; margin:5px 0;">Seeking a challenging position with opportunities for career advancement and learning where I can use my skills optimally and give my efforts fully and realize my potential. Willing to work as a key player in the challenging environment.</p>
+                <div class="pdf-section">Qualification</div>
+                <ul class="pdf-list">${getList('qual-input').map(v => `<li>${v}</li>`).join('')}</ul>
+                <div class="pdf-section">Work Experience</div>
+                <ul class="pdf-list">${getList('exp-input').map(v => `<li>${v}</li>`).join('')}</ul>
+                <div class="pdf-section">Behavioral Skill</div>
+                <ul class="pdf-list">${getList('skill-input').map(v => `<li>${v}</li>`).join('')}</ul>
+                <div class="pdf-section">Personal Details</div>
+                <table class="pdf-table">
+                    <tr><td width="35%"><b>Father's Name</b></td><td>: ${getValue('in-fname')}</td></tr>
+                    <tr><td><b>Date of Birth</b></td><td>: ${getValue('in-dob')}</td></tr>
+                    <tr><td><b>Gender</b></td><td>: ${getValue('in-gender')}</td></tr>
+                    <tr><td><b>Marital Status</b></td><td>: ${getValue('in-status')}</td></tr>
+                    <tr><td><b>Nationality</b></td><td>: ${getValue('in-nat')}</td></tr>
+                    <tr><td><b>Language Known</b></td><td>: ${getValue('in-lang')}</td></tr>
+                </table>
+                <div style="margin-top:20px; font-size:15px; font-weight:bold; text-decoration:underline;">DECLARATION</div>
+                <p style="font-size:14px; margin-top:5px;">I hereby declare that the above written particulars are true to the best of my knowledge and belief.</p>
+                <div style="margin-top:30px; display:flex; justify-content:space-between; align-items:flex-end;">
+                    <div style="font-size:14px;"><b>Place: Delhi</b></div>
+                    <div style="text-align:center; font-size:14px; border-top:1px solid #000; padding-top:5px; min-width:150px;">
+                        <b>Applicant Signature</b><br><i style="text-transform:uppercase;">${getValue('in-name')}</i>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openPreview() {
+            document.getElementById('resume-output').innerHTML = generateHTML();
+            document.getElementById('previewModal').style.display = 'flex';
+        }
+
+        function closePreview() { document.getElementById('previewModal').style.display = 'none'; }
+
+        function downloadPDF() {
+            const element = document.getElementById('resume-output');
+            const opt = {
+                margin: 0, filename: 'Resume.pdf', image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 3, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html>
